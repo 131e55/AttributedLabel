@@ -118,7 +118,7 @@ open class AttributedLabel: UIView {
     /// Also should call invalidateIntrinsicContentSize when intrinsicContentSize is cached. When text was changed for example.
     public var usesIntrinsicContentSize = false
 
-    var mergedAttributedText: NSAttributedString? {
+    open var mergedAttributedText: NSAttributedString? {
         if let attributedText = attributedText {
             return mergeAttributes(attributedText)
         }
