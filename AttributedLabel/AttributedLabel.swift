@@ -125,8 +125,8 @@ open class AttributedLabel: UIView {
         return nil
     }
 
-    let container = NSTextContainer()
-    let layoutManager = NSLayoutManager()
+    open let container = NSTextContainer()
+    open let layoutManager = NSLayoutManager()
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
