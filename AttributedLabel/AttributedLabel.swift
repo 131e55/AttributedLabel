@@ -135,6 +135,7 @@ open class AttributedLabel: UIView {
         contentMode = .redraw
         lineBreakMode = .byTruncatingTail
         padding = 0
+        layoutManager.usesFontLeading = false
         layoutManager.addTextContainer(container)
     }
 
@@ -145,6 +146,7 @@ open class AttributedLabel: UIView {
         contentMode = .redraw
         lineBreakMode = .byTruncatingTail
         padding = 0
+        layoutManager.usesFontLeading = false
         layoutManager.addTextContainer(container)
     }
 
