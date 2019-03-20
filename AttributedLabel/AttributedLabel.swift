@@ -113,6 +113,9 @@ open class AttributedLabel: UIView {
             }
         }
     }
+    /// Support for constraint-based layout (auto layout)
+    /// If nonzero, this is used when determining -intrinsicContentSize for multiline labels
+    open var preferredMaxLayoutWidth: CGFloat = 0
 
     /// If need to use intrinsicContentSize set true.
     /// Also should call invalidateIntrinsicContentSize when intrinsicContentSize is cached. When text was changed for example.
@@ -158,13 +161,9 @@ open class AttributedLabel: UIView {
 
     open override var intrinsicContentSize: CGSize {
         if usesIntrinsicContentSize {
-            guard let attributedText = mergedAttributedText else {
-                return .zero
-            }
-            let size = CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude)
-            let boundingRect = attributedText.boundingRect(with: size, options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
-
-            return boundingRect.integral.size
+            let width = preferredMaxLayoutWidth == 0 ? bounds.width : preferredMaxLayoutWidth
+            let size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+            return sizeThatFits(size)
         } else {
             return bounds.size
         }
@@ -203,7 +202,9 @@ open class AttributedLabel: UIView {
     open override func sizeToFit() {
         super.sizeToFit()
 
-        frame.size = sizeThatFits(CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude))
+        let width = preferredMaxLayoutWidth == 0 ? CGFloat.greatestFiniteMagnitude : preferredMaxLayoutWidth
+        let size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+        frame.size = sizeThatFits(size)
     }
 
     func mergeAttributes(_ attributedText: NSAttributedString) -> NSAttributedString {
@@ -230,7 +231,7 @@ open class AttributedLabel: UIView {
 
 extension NSMutableAttributedString {
     @discardableResult
-    func addAttribute(_ attrName: NSAttributedStringKey, attr: AnyObject, in range: NSRange? = nil) -> Self {
+    func addAttribute(_ attrName: NSAttributedString.Key, attr: AnyObject, in range: NSRange? = nil) -> Self {
         let range = range ?? NSRange(location: 0, length: length)
         enumerateAttribute(attrName, in: range, options: .reverse) { object, range, pointer in
             if object == nil {
